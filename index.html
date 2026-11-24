@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>托福單字轉故事｜TOEFL Story Generator</title>
+  <link rel="stylesheet" href="./css/style.css" />
+</head>
+<body>
+  <div class="page-shell">
+    <header class="page-header">
+      <div class="header-top">
+        <h1>托福單字轉故事</h1>
+        <span id="model-hint" class="model-badge">目前模型：gemini-2.5-flash</span>
+      </div>
+      <p class="page-subtitle">
+        輸入今日新單字與複習單字，自動產生單字學習卡與高中 7000 單字程度的自然閱讀短文。
+      </p>
+    </header>
+
+    <main class="main-content">
+      <!-- 1. API Key 設定區 -->
+      <section class="panel" aria-labelledby="api-key-heading">
+        <div class="panel-header">
+          <h2 id="api-key-heading">1. Gemini API Key 設定</h2>
+        </div>
+        <div class="api-key-row">
+          <input
+            type="password"
+            id="api-key-input"
+            class="text-input api-key-input"
+            placeholder="請貼上您的 Gemini API Key（AIza...）"
+            autocomplete="off"
+            spellcheck="false"
+          />
+          <button type="button" id="toggle-key-btn" class="btn btn-secondary">顯示</button>
+          <button type="button" id="save-key-btn" class="btn btn-primary">儲存</button>
+          <button type="button" id="clear-key-btn" class="btn btn-ghost">清除</button>
+        </div>
+        <p id="api-key-status" class="status-message status-message--info"></p>
+      </section>
+
+      <!-- 2. 單字與文章風格表單 -->
+      <form id="study-form" class="panel" novalidate>
+        <div class="panel-header">
+          <h2>2. 單字輸入</h2>
+          <div class="panel-actions">
+            <button type="button" id="fill-sample-new-btn" class="btn btn-ghost btn-sm">
+              填入範例新字
+            </button>
+            <button type="button" id="clear-new-words-btn" class="btn btn-ghost btn-sm">
+              清空新單字
+            </button>
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">新單字（0～5 個，已預填 5 個托福範例字）</label>
+          <div class="new-words-grid">
+            <input
+              type="text"
+              class="text-input new-word-input"
+              value="ubiquitous"
+              placeholder="新單字 1"
+              aria-label="新單字 1"
+            />
+            <input
+              type="text"
+              class="text-input new-word-input"
+              value="mitigate"
+              placeholder="新單字 2"
+              aria-label="新單字 2"
+            />
+            <input
+              type="text"
+              class="text-input new-word-input"
+              value="ephemeral"
+              placeholder="新單字 3"
+              aria-label="新單字 3"
+            />
+            <input
+              type="text"
+              class="text-input new-word-input"
+              value="corroborate"
+              placeholder="新單字 4"
+              aria-label="新單字 4"
+            />
+            <input
+              type="text"
+              class="text-input new-word-input"
+              value="pragmatic"
+              placeholder="新單字 5"
+              aria-label="新單字 5"
+            />
+          </div>
+          <p id="new-words-count" class="field-hint"></p>
+        </div>
+
+        <div class="field-group">
+          <label for="review-words-input" class="field-label">
+            複習單字（選填，以逗號分隔；每 6 個字自動分批生成一篇複習文章）
+          </label>
+          <textarea
+            id="review-words-input"
+            class="textarea-input"
+            rows="2"
+            placeholder="例如：ambiguous, bolster, catalyst, deteriorate, eloquent, fluctuate, hamper"
+          ></textarea>
+          <p id="review-words-info" class="field-hint"></p>
+        </div>
+
+        <hr class="section-divider" />
+
+        <!-- 3. 文章風格 Prompt 調整區 -->
+        <div class="panel-header">
+          <h2>3. 文章風格 Prompt 設定</h2>
+          <button type="button" id="reset-prompt-btn" class="btn btn-ghost btn-sm">
+            恢復預設
+          </button>
+        </div>
+
+        <div class="fixed-rule-note">
+          固定條件：除了目標單字外，文章以<strong>台灣高中 7000 單字程度（CEFR B1–B2）</strong>撰寫，且文章中不刻意標記單字。
+        </div>
+
+        <div class="field-group">
+          <span class="field-label">快速套用風格範本</span>
+          <div id="style-presets" class="preset-group" role="group" aria-label="文章風格範本"></div>
+        </div>
+
+        <div class="field-group">
+          <label for="style-prompt-input" class="field-label">
+            自訂文章風格指令（可直接修改語氣、題材或故事背景）
+          </label>
+          <textarea
+            id="style-prompt-input"
+            class="textarea-input"
+            rows="3"
+            placeholder="輸入您希望的文章風格、主題或故事設定…"
+          ></textarea>
+          <p id="prompt-status" class="status-message status-message--info"></p>
+        </div>
+
+        <div class="submit-row">
+          <button type="submit" id="generate-btn" class="btn btn-primary btn-lg">
+            生成學習內容
+          </button>
+        </div>
+      </form>
+
+      <!-- 4. Loading / 錯誤提示區 -->
+      <section id="feedback-area" aria-live="polite"></section>
+
+      <!-- 5. 生成結果區 -->
+      <section id="results-area" aria-live="polite"></section>
+    </main>
+  </div>
+
+  <script type="module" src="./js/app.js"></script>
+</body>
+</html>
